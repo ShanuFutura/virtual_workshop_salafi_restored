@@ -32,13 +32,13 @@ class _MechanicAuthenticationPageState extends State<MechanicAuthenticationPage>
   authenticate() {
     if (fkey.currentState!.validate()) {
       if (!isLogin) {
-        Services.postData(endpoint: 'signUp', params: {
+        Services.postData(endpoint: 'Mechanic_registration', params: {
           'username': usernameController.text,
           'password1': passwordController.text,
           'password2': passwordController.text,
           'workshop_name': nameController.text,
           'address': addressController.text,
-          'phone': phoneController.text,
+          'phone_number': phoneController.text,
           'location':locationController.text,
           'min_wage':minWageController.text,
         });
