@@ -1,6 +1,7 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:virtual_workshop/pages/user_home_page.dart';
 import 'package:virtual_workshop/services/services.dart';
 
 class UserAuthenticationPage extends StatefulWidget {
@@ -21,14 +22,20 @@ class _UserAuthenticationPageState extends State<UserAuthenticationPage> {
 
   TextEditingController phoneController = TextEditingController();
 
-  bool isLogin = true;
 
   GlobalKey<FormState> fkey = GlobalKey<FormState>();
 
-  authenticate() {
+  authenticate() async {
+    Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserHomePage(),
+            ));
     if (fkey.currentState!.validate()) {
-      if (!isLogin) {
-        Services.postData(endpoint: 'user_registration', params: {
+      Map result = {};
+     
+        result =
+            await Services.postData(endpoint: 'user_registration', params: {
           'username': usernameController.text,
           'password1': passwordController.text,
           'password2': passwordController.text,
@@ -36,11 +43,15 @@ class _UserAuthenticationPageState extends State<UserAuthenticationPage> {
           'address': addressController.text,
           'phone_number': phoneController.text,
         });
-      }else{
-        Services.postData(endpoint: 'singin', params: {
-          'username':usernameController.text,
-          'password':passwordController.text,
-        });
+      
+      if (!result['result']) {
+        Fluttertoast.showToast(msg: 'Something went wrong');
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserHomePage(),
+            ));
       }
     }
   }
@@ -56,7 +67,7 @@ class _UserAuthenticationPageState extends State<UserAuthenticationPage> {
               Padding(
                 padding: EdgeInsets.only(top: 100, bottom: 30),
                 child: Text(
-                  isLogin?'Login':'SignUp',
+                 'SignUp',
                   style: TextStyle(fontSize: 30),
                 ),
               ),
@@ -70,16 +81,16 @@ class _UserAuthenticationPageState extends State<UserAuthenticationPage> {
                   ),
                 ),
               ),
-              if(!isLogin) Padding(
-                padding: EdgeInsets.all(10),
-                child: TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    label: Text('name'),
-                    border: OutlineInputBorder(),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      label: Text('name'),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ),
-              ),
               Padding(
                 padding: EdgeInsets.all(10),
                 child: TextFormField(
@@ -90,44 +101,34 @@ class _UserAuthenticationPageState extends State<UserAuthenticationPage> {
                   ),
                 ),
               ),
-            if(!isLogin)  Padding(
-                padding: EdgeInsets.all(10),
-                child: TextFormField(
-                  maxLines: 4,
-                  minLines: 4,
-                  controller: addressController,
-                  decoration: InputDecoration(
-                    label: Text('address'),
-                    border: OutlineInputBorder(),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextFormField(
+                    maxLines: 4,
+                    minLines: 4,
+                    controller: addressController,
+                    decoration: InputDecoration(
+                      label: Text('address'),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ),
-              ),
-             if(!isLogin) Padding(
-                padding: EdgeInsets.all(10),
-                child: TextFormField(
-                  controller: phoneController,
-                  decoration: InputDecoration(
-                    label: Text('phone'),
-                    border: OutlineInputBorder(),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextFormField(
+                    controller: phoneController,
+                    decoration: InputDecoration(
+                      label: Text('phone'),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: ElevatedButton(
                     onPressed: authenticate, child: Text('Sign Up')),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('New to this ?'),
-                  TextButton(onPressed: (){
-                    setState(() {
-                      isLogin=!isLogin;
-                    });
-                  }, child: Text('Login instead')),
-                ],
-              )
+             
             ],
           ),
         ),

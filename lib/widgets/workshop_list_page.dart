@@ -36,9 +36,7 @@ class WorkshopListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: FutureBuilder(
+    return FutureBuilder(
         future: getData(context),
         builder: (context, snapshot) {
           return Card(
@@ -48,13 +46,12 @@ class WorkshopListPage extends StatelessWidget {
                 return ListTile(
                   title: Text(workshops[index].workshopName),
                   subtitle: Text(workshops[index].phoneNumber),
-                  trailing: Text(workshops[index].location),
+                  trailing: Text('${workshops[index].distance} Kms'),
                 );
               },
             ),
           );
         },
-      ),
-    );
+      );
   }
 }
