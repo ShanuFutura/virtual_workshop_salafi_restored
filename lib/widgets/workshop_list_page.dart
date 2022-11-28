@@ -39,17 +39,18 @@ class WorkshopListPage extends StatelessWidget {
     return FutureBuilder(
         future: getData(context),
         builder: (context, snapshot) {
-          return Card(
-            child: ListView.builder(
-              itemCount: workshops.length,
-              itemBuilder: (context, index) {
-                return ListTile(
+          return ListView.builder(
+            itemCount: workshops.length,
+            itemBuilder: (context, index) {
+              return Card(
+                elevation: 9,
+                child: ListTile(
                   title: Text(workshops[index].workshopName),
                   subtitle: Text(workshops[index].phoneNumber),
                   trailing: Text('${workshops[index].distance} Kms'),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         },
       );

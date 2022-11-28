@@ -1,7 +1,7 @@
 import 'package:virtual_workshop/models/message.dart';
 
 class Constants {
-  static String BASE_URL = 'http://192.168.68.147:8000/';
+  static String BASE_URL = 'http://192.168.29.8:8000/';
 
   static List<Map> youtubeVideosList = [
     {'name': 'test', 'url': 'https://www.jsontodart.in/'},

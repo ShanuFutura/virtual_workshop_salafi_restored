@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_workshop/pages/mechanic_authentication_page.dart';
 import 'package:virtual_workshop/pages/mechanic_home_page.dart';
 import 'package:virtual_workshop/pages/user_authentication_page.dart';
+import 'package:virtual_workshop/pages/user_home_page.dart';
 import 'package:virtual_workshop/services/services.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,37 +22,61 @@ class _LoginPageState extends State<LoginPage> {
 
   GlobalKey<FormState> fkey = GlobalKey<FormState>();
 
-  authenticate() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MechanicHomePage(),
-      ),
-    );
+  authenticate() async{
+    print('object');
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => MechanicHomePage(),
+    //   ),
+    // );
     if (fkey.currentState!.validate()) {
       Map result = {};
 
-      Services.postData(endpoint: 'login_views', params: {
-        'username': usernameController.text,
-        'password': passwordController.text,
+    result=await  Services.postData(endpoint: 'login_views', params: {
+        'uname': usernameController.text,
+        'pass': passwordController.text,
       });
 
-      if (!result['result']) {
+      if (!result['status']) {
         Fluttertoast.showToast(msg: 'Something went wrong');
       } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MechanicHomePage(),
-            ));
+        storeUserData(
+          '${result['result']['id']}',
+          result['result']['type'],
+        ).then(
+          (_) {
+            if (result['result']['type'] == 'user') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserHomePage(),
+                ),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MechanicHomePage(),
+                ),
+              );
+            }
+          },
+        );
       }
     }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MechanicHomePage(),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => MechanicHomePage(),
+    //   ),
+    // );
+  }
+
+  Future<void> storeUserData(String userId, String userType) async {
+    SharedPreferences spref = await SharedPreferences.getInstance();
+    spref.setString('userId', userId);
+    spref.setString('userType', userType);
   }
 
   @override
@@ -81,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   controller: usernameController,
-                  decoration:const InputDecoration(
+                  decoration: const InputDecoration(
                     label: Text('username'),
                     border: OutlineInputBorder(),
                   ),
@@ -96,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   controller: passwordController,
-                  decoration:const InputDecoration(
+                  decoration: const InputDecoration(
                     label: Text('password'),
                     border: OutlineInputBorder(),
                   ),
@@ -105,13 +131,14 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: ElevatedButton(
-                    onPressed: authenticate, child: Text('Sign Up')),
+                    onPressed: authenticate, child: Text('Login')),
               ),
               const Padding(
                 padding: const EdgeInsets.all(10),
                 child: Text('OR'),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Signup as'),
                   TextButton(

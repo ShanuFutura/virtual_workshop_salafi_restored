@@ -6,10 +6,11 @@ import 'package:virtual_workshop/constants.dart';
 import 'package:location/location.dart';
 
 class Services {
-  static postData({required String endpoint, required Map params}) async {
-    Response res =
-        await post(Uri.parse(Constants.BASE_URL + endpoint), body: params);
-    print(res.body);
+  static Future<dynamic> postData({required String endpoint, required Map params}) async {
+    print('sending request to $endpoint with params: $params');
+    // Response res =await post(Uri.parse('http://192.168.29.8:8000/login_views'));
+        Response res= await post(Uri.parse(Constants.BASE_URL + endpoint), body: params);
+    print('>>>>>${res.body}');
     if (res.statusCode < 300 && res.statusCode > 199) {
       return jsonDecode(res.body);
     } else {
@@ -17,7 +18,7 @@ class Services {
     }
   }
 
-  static getData({required String endpoint})async{
+  static Future<dynamic> getData({required String endpoint})async{
     Response res= await get(Uri.parse(Constants.BASE_URL+endpoint));
     print(res.body);
     if (res.statusCode < 300 && res.statusCode > 199) {

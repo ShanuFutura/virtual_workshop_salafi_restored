@@ -30,17 +30,17 @@ class _MechanicAuthenticationPageState
 
   GlobalKey<FormState> fkey = GlobalKey<FormState>();
 
-  authenticate() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MechanicHomePage(),
-      ),
-    );
+  authenticate() async{
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => MechanicHomePage(),
+    //   ),
+    // );
     if (fkey.currentState!.validate()) {
       Map result = {};
       if (!isLogin) {
-        Map res = Services.postData(endpoint: 'Mechanic_registration', params: {
+        Map res =await Services.postData(endpoint: 'Mechanic_registration', params: {
           'username': usernameController.text,
           'password1': passwordController.text,
           'password2': passwordController.text,
