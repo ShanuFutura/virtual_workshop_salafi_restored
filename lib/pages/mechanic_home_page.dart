@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:virtual_workshop/pages/work_request_page.dart';
 import 'package:virtual_workshop/pages/youtube_videos_page.dart';
 import 'package:virtual_workshop/widgets/mechanic_drawer.dart';
+import 'package:virtual_workshop/widgets/work_requests_list.dart';
 import 'package:virtual_workshop/widgets/youtube_videos_list.dart';
 
 class MechanicHomePage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _MechanicHomePageState extends State<MechanicHomePage> {
             body: TabBarView(
               children: [
                 YoutubeVideosList(),
-                WorkRequestPage(),
+                WorkRequestList(),
               ],
             )
             // YoutubeVideosList()

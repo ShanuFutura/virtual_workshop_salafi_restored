@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_workshop/pages/mechanic_home_page.dart';
 import 'package:virtual_workshop/services/services.dart';
 
@@ -39,7 +40,7 @@ class _MechanicAuthenticationPageState
     // );
     if (fkey.currentState!.validate()) {
       Map result = {};
-      if (!isLogin) {
+     
         Map res =await Services.postData(endpoint: 'Mechanic_registration', params: {
           'username': usernameController.text,
           'password1': passwordController.text,
@@ -49,9 +50,7 @@ class _MechanicAuthenticationPageState
           'phone_number': phoneController.text,
           'location': locationController.text,
           'min_wage': minWageController.text,
-        });
-      }
-      if (!result['result']) {
+        }); if (result['result']=='true') {
         Fluttertoast.showToast(msg: 'Something went wrong');
       } else {
         Navigator.push(
@@ -60,8 +59,17 @@ class _MechanicAuthenticationPageState
               builder: (context) => MechanicHomePage(),
             ));
       }
-    }
+      }
+     
     
+    
+  }
+
+  storeUserData()async{
+    SharedPreferences spref=await SharedPreferences.getInstance();
+    spref.setString('userType', 'mechanic');
+    spref.setString('userId', 'mechanic');
+
   }
 
   @override
@@ -162,6 +170,18 @@ class _MechanicAuthenticationPageState
                           });
                         }),
                   ],
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: minWageController,
+                    decoration: InputDecoration(
+                      
+                      label: Text('minimum wage'),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                 ),
               Padding(
                 padding: const EdgeInsets.only(top: 20),

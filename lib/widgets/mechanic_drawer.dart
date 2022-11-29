@@ -16,7 +16,7 @@ class MechanicDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20),
             child: CircleAvatar(
-              radius: 40,
+              radius: 80,
             ),
           ),
           Padding(
